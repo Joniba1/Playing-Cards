@@ -10,18 +10,18 @@
   <!-- CSS -->
   <style>
     #cardImagesContainer {
-      position: fixed;    
+      position: fixed;
       margin: 20px;
       margin-top: 40px;
       display: flex;
-      flex-wrap: wrap; 
+      flex-wrap: wrap;
       max-height: 800px;
-      overflow-y: auto;  /*scroller*/
+      overflow-y: auto;
     }
 
     #cardImagesContainer img {
       display: block;
-      margin-bottom: 6px;
+      margin: 5px;
       width: 150px;
       height: 200px;
     }
@@ -34,15 +34,15 @@
 
   <h1>Playing Cards</h1>
 
+  <!--displayed by default as long as its not empty-->
   <div id="cardImagesContainer"></div>
 
   <!-- buttons -->
-  <button onclick="clearScreen()">Clear Screen</button>
-  <button onclick="loadCardImages()">Load Deck</button>
+  <button onclick="loadImagesFromBackend()">Show Deck</button>
   <button onclick="getRandomCard()">Get Random Card</button>
-  <button onclick="shuffleDeck()">Shuffle Deck</button>
-  <button onclick="showDeleteCardForm(true)">Delete Specific Card</button>
   <button onclick="showAddCardForm(true)">Add Specific Card</button>
+  <button onclick="showDeleteCardForm(true)">Delete Specific Card</button>
+  <button onclick="shuffleDeck()">Shuffle Deck</button>
 
   <!-- forms -->
   <form id="addCardForm" style="display: none;">
@@ -120,10 +120,10 @@
 
   <script>
 
-    window.onload = loadCardImages();
+    window.onload = loadImagesFromBackend();
 
-    //1. Requests the deck's current state (and loads the cards' pictures) -GET
-    async function loadCardImages() {
+    //1. Requests the deck's current state (and loads the cards' pictures into the container) -GET
+    async function loadImagesFromBackend() {
       const response = await fetch('/api/getDeck', {
         method: 'GET',
         headers: {
@@ -135,7 +135,6 @@
 
       const cardImagesContainer = document.getElementById('cardImagesContainer');
 
-      // Clear previous images
       clearScreen();
 
       //append  images to the container
@@ -154,9 +153,10 @@
           'Content-Type': 'application/json'
         }
       });
+
       const randomCard = await response.json();
 
-      clearScreen(); // Clear previous images
+      clearScreen();
 
       const cardImagesContainer = document.getElementById('cardImagesContainer');
 
@@ -170,7 +170,7 @@
 
       const number = document.getElementById('newCardNumber').value;
       const shape = document.getElementById('newCardShape').value;
-      let imageUrl = "";
+      const imageUrl = "";
       let color = "black";
 
       if (shape === "diamonds" || shape === "hearts") {
@@ -210,7 +210,7 @@
 
       const result = await response.json();
       alert(result.message);
-      loadCardImages();
+      loadImagesFromBackend();
     }
 
     //5. Requests the shuffleDeck fucmtion from the backend and loads the deck -PATCH
@@ -224,11 +224,11 @@
       });
       const deck = await response.json();
 
-      loadCardImages();
+      loadImagesFromBackend();
     }
 
 
-    //forms functions
+    //Forms functions
     function showAddCardForm(boolean) {
       if (boolean == true) {
         showDeleteCardForm(false);
@@ -240,7 +240,7 @@
     }
 
     function showDeleteCardForm(boolean) {
-      const cardImagesContainer = document.getElementById('cardImagesContainer'); //only once is fine since the form's functions call each other
+      const cardImagesContainer = document.getElementById('cardImagesContainer'); //only once is fine since the forms' functions call each other
       cardImagesContainer.innerHTML = '';
 
       if (boolean == true) {
@@ -256,7 +256,7 @@
     //Clears the screen
     function clearScreen() {
       const cardImagesContainer = document.getElementById('cardImagesContainer');
-      cardImagesContainer.innerHTML = '';
+      cardImagesContainer.innerHTML = ''; //Empties the container which makes it invisible
       showAddCardForm(false);
       showDeleteCardForm(false);
     }
@@ -264,4 +264,5 @@
   </script>
 
 </body>
+
 </html>
