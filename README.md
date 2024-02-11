@@ -1,7 +1,7 @@
 ### Pre-Requirements:
 [Node.js](https://nodejs.org/en)
 
-Type to the terminal to install Express: npm install express
+Type into the terminal to install Express: npm install express
 
 ---
 
