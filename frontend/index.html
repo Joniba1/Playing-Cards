@@ -10,26 +10,22 @@
   <!-- CSS -->
   <style>
     #cardImagesContainer {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      margin: 10px;
-      /* z-index: 9999; */
+      position: fixed;    
+      margin: 20px;
+      margin-top: 40px;
       display: flex;
-      flex-wrap: wrap;
+      flex-wrap: wrap; 
+      max-height: 800px;
+      overflow-y: auto;  /*scroller*/
     }
 
     #cardImagesContainer img {
       display: block;
       margin-bottom: 6px;
-      width: 130px;
-      height: 195px;
+      width: 150px;
+      height: 200px;
     }
 
-    #cardImagesContainer {
-      max-height: 830px;
-      overflow-y: auto;
-    }
   </style>
 
 
@@ -52,11 +48,11 @@
   <!-- forms -->
   <form id="addCardForm" style="display: none;">
 
-    <h3>Add Card:</h3>
+    <h2>Add Card:</h2>
 
-    <label for="newCardNumber">Number:</label>
+    <label for="newCardNumber">Card:</label>
     <select id="newCardNumber">
-      <option value="1">1</option>
+      <option value="1">Ace</option>
       <option value="2">2</option>
       <option value="3">3</option>
       <option value="4">4</option>
@@ -71,7 +67,9 @@
       <option value="13">King</option>
     </select>
 
-    <label for="newCardShape">Shape:</label>
+    <span>of</span>
+
+    <label for="newCardShape"></label>
     <select id="newCardShape">
       <option value="diamonds">Diamonds</option>
       <option value="clubs">Clubs</option>
@@ -86,11 +84,11 @@
 
   <form id="deleteCardForm" style="display: none;">
 
-    <h3>Delete Card:</h3>
+    <h2>Delete Card:</h2>
 
-    <label for="deleteCardNumber">Number:</label>
+    <label for="deleteCardNumber">Card:</label>
     <select id="deleteCardNumber">
-      <option value="1">1</option>
+      <option value="1">Ace</option>
       <option value="2">2</option>
       <option value="3">3</option>
       <option value="4">4</option>
@@ -105,7 +103,9 @@
       <option value="13">King</option>
     </select>
 
-    <label for="deleteCardShape">Shape:</label>
+    <span>of</span>
+
+    <label for="deleteCardShape"></label>
     <select id="deleteCardShape">
       <option value="diamonds">Diamonds</option>
       <option value="clubs">Clubs</option>
@@ -121,7 +121,7 @@
 
   <script>
 
-    window.onload = loadCardImages;
+    window.onload = loadCardImages();
 
     //1. Requests the deck's current state (and loads the cards' pictures) -GET
     async function loadCardImages() {
@@ -139,14 +139,11 @@
       // Clear previous images
       clearScreen();
 
-      // Append new images
+      //append  images to the container
       deck.forEach(card => {
-        const imgElement = document.createElement('img');
-        imgElement.src = card.imageUrl;
-        imgElement.alt = `Card ${card.number} - ${card.shape}`;
-        imgElement.width = 100;
-        imgElement.height = 150;
-        cardImagesContainer.appendChild(imgElement);
+        const img = document.createElement('img');
+        img.src = card.imageUrl;
+        cardImagesContainer.appendChild(img);
       });
     }
 
@@ -164,32 +161,12 @@
 
       const cardImagesContainer = document.getElementById('cardImagesContainer');
 
-      const imgElement = document.createElement('img');
-      imgElement.src = randomCard.imageUrl;
-      imgElement.alt = `Card ${randomCard.number} - ${randomCard.shape}`;
-      imgElement.width = 100;
-      imgElement.height = 150;
-      cardImagesContainer.appendChild(imgElement);
+      const img = document.createElement('img');
+      img.src = randomCard.imageUrl;
+      cardImagesContainer.appendChild(img);
     }
 
-    //3. Calls the deleteCard function from the backend -DELETE
-    async function deleteCard() {
-      const number = document.getElementById('deleteCardNumber').value;
-      const shape = document.getElementById('deleteCardShape').value;
-
-      const response = await fetch('/api/deleteCard', {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ number, shape })
-      });
-
-      const result = await response.json();
-      alert(result.message);
-    }
-
-    //4. Requests the addCar function from the backend -POST
+    //3. Requests the addCar function from the backend -POST
     async function addCard() {
 
       const number = document.getElementById('newCardNumber').value;
@@ -210,14 +187,31 @@
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newCard),
+        body: JSON.stringify(newCard), //sends the STRING form of new card to the backend
       });
 
       const result = await response.json();
       alert(result.message);
 
       showAddCardForm(false);
+    }
 
+    //4. Calls the deleteCard function from the backend -DELETE
+    async function deleteCard() {
+      const number = document.getElementById('deleteCardNumber').value;
+      const shape = document.getElementById('deleteCardShape').value;
+
+      const response = await fetch('/api/deleteCard', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ number, shape })
+      });
+
+      const result = await response.json();
+      alert(result.message);
+      loadCardImages();
     }
 
     //5. Requests the shuffleDeck fucmtion from the backend and loads the deck -PATCH
@@ -271,5 +265,4 @@
   </script>
 
 </body>
-
 </html>

@@ -1,8 +1,9 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const defaultDeck  = require('./deck.js').getDeck(); /*I need the default state of the deck, not the current, in order to always
-                                                      have access to the cards' urls even if a card was deleted (for the add card function)*/
+const defaultDeck = require('./deck.js').getDeck(); /*I need the default state of the deck, not the current, in order to always
+                                                      have access to the cards' urls even if a card was deleted (for the add card function)
+                                                      and for resetting the deck each time the server reopens*/
 const app = express();
 const port = 3000;
 
@@ -19,7 +20,6 @@ const readJsonFile = () => {
 const updateJsonFile = (deck) => {
   const jsonString = JSON.stringify(deck, null, 2);
   fs.writeFileSync('deck.json', jsonString);
-  console.log('Deck of cards was updated');
 };
 
 //The REST API functions:
@@ -47,7 +47,7 @@ app.get('/api/getRndCardFromDeck', (req, res) => {
 app.post('/api/addCard', (req, res) => {
   const newCard = req.body;
 
-  newCard.number = parseInt(newCard.number); 
+  newCard.number = parseInt(newCard.number);
 
   newCard.imageUrl = defaultDeck.find(card => card.number === newCard.number && card.shape === newCard.shape).imageUrl;
 
@@ -66,11 +66,17 @@ app.delete('/api/deleteCard', (req, res) => {
 
   let deck = readJsonFile();
 
-  deck = deck.filter(card => !(card.number === number && card.shape === shape));
+  const updatedDeck = deck.filter(card => !(card.number === number && card.shape === shape));
 
-  updateJsonFile(deck);
+  updateJsonFile(updatedDeck);
 
-  res.json({ message: 'Card deleted successfully' });
+  if (updatedDeck.length === deck.length) {
+    res.json({ message: 'Card was not found' });
+  }
+  else {
+    res.json({ message: 'Card deleted successfully' });
+
+  }
 });
 
 //PATCH - Shuffles the deck
@@ -92,5 +98,6 @@ app.patch('/api/shuffleDeck', (req, res) => {
 
 //Starts the server and listens to incoming requests from the HTML file
 app.listen(port, () => {
+  updateJsonFile(defaultDeck);
   console.log(`Server is running at http://localhost:${port}`);
 });
