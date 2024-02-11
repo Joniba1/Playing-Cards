@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import path from 'path';
 import fs from 'fs';
-
 interface Card {
   number: number;
   shape: string;
@@ -9,11 +8,6 @@ interface Card {
   imageUrl: string;
 }
 
-//check
-
-interface Deck {
-  cards: Card[];
-}
 
 
 /*I need the default state of the deck, not the current, in order to always
@@ -25,27 +19,31 @@ const app = express();
 const port = 3000;
 const base_URL = 'http://localhost:'
 
-app.use(express.json());
-app.use(express.static(path.join(__dirname, '..', 'frontend'))); //serves as a 'middleperson', makes the server accessible to clients
+app.use(express.static(path.join(__dirname, '..', 'frontend'), {
+  setHeaders: (res, path, stat) => {
+    if (path.endsWith('.ts')) {
+      res.setHeader('Content-Type', 'application/javascript');
+    }
+  },
+}));
 
-type CustomDeck = Card[];
 
 //Reads and returns the json file
-const readJsonFile = (): CustomDeck => {
-  const jsonData = fs.readFileSync('dynamic_deck.json', 'utf-8');
-  return JSON.parse(jsonData) as CustomDeck;
+const readJsonFile = (): Card[] => {
+  const jsonData: string = fs.readFileSync('dynamic_deck.json', 'utf-8');
+  return JSON.parse(jsonData) as Card[];
 };
 
 //updates the json file
-const updateJsonFile = (deck: CustomDeck): void => {
-  const jsonString = JSON.stringify(deck, null, 2);
+const updateJsonFile = (deck: Card[]): void => {
+  const jsonString: string = JSON.stringify(deck, null, 2);
   fs.writeFileSync('dynamic_deck.json', jsonString);
 };
 
 //The REST API functions:
 //GET.1 - Returns all the cards in the deck
-app.get('/api/getDeck', (req, res) => {
-  const deck = readJsonFile();
+app.get('/api/getDeck', (req: Request, res: Response) => {
+  const deck: Card[] = readJsonFile();
   res.json(deck);
 });
 

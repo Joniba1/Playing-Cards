@@ -7,7 +7,8 @@ interface Card {
     imageUrl: string;
 }
 
-//window.onload = () => loadImagesFromBackend();
+
+window.onload = () => loadImagesFromBackend();
 
 //1. Requests the deck's current state (and loads the cards' pictures into the container) -GET
 export async function loadImagesFromBackend(): Promise<void> {
@@ -56,7 +57,6 @@ async function getRandomCard(): Promise<void> {
     }
 }
 
-
 //3. Requests the addCard function from the backend -POST
 async function addCard(): Promise<void> {
     const number = (document.getElementById('newCardNumber') as HTMLInputElement).value;
@@ -89,7 +89,6 @@ async function addCard(): Promise<void> {
     showAddCardForm(false);
 }
 
-
 //4. Calls the deleteCard function from the backend -DELETE
 async function deleteCard(): Promise<void> {
     const number = (document.getElementById('deleteCardNumber') as HTMLInputElement).value;
@@ -107,7 +106,6 @@ async function deleteCard(): Promise<void> {
     alert(result.message);
     await loadImagesFromBackend();
 }
-
 
 //5. Requests the shuffleDeck fucmtion from the backend and loads the deck -PATCH
 async function shuffleDeck(): Promise<void> {
