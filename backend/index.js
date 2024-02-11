@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const defaultDeck  = require('./cards.js').getDeck(); /*I need the default state of the deck, not the current, in order to always
+const defaultDeck  = require('./deck.js').getDeck(); /*I need the default state of the deck, not the current, in order to always
                                                       have access to the cards' urls even if a card was deleted (for the add card function)*/
 const app = express();
 const port = 3000;
