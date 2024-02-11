@@ -5,7 +5,7 @@ const fs = require('fs');
 /*I need the default state of the deck, not the current, in order to always
  have access to the cards' urls even if a card was deleted (for the add card function)
  and for resetting the deck each time the server reopens*/
-const defaultDeck = require('./deck.js').getDeck();
+const defaultDeck = require('./base_deck.js').getDeck();
 
 const app = express();
 const port = 3000;
@@ -16,14 +16,14 @@ app.use(express.static(path.join(__dirname, '..', 'frontend'))); //serves as a '
 
 //Reads and returns the json file
 const readJsonFile = () => {
-  const jsonData = fs.readFileSync('deck.json', 'utf-8');
+  const jsonData = fs.readFileSync('dynamic_deck.json', 'utf-8');
   return JSON.parse(jsonData);
 }
 
 //updates the json file
 const updateJsonFile = (deck) => {
   const jsonString = JSON.stringify(deck, null, 2);
-  fs.writeFileSync('deck.json', jsonString);
+  fs.writeFileSync('dynamic_deck.json', jsonString);
 };
 
 //The REST API functions:

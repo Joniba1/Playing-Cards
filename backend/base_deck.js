@@ -346,5 +346,5 @@ module.exports = deckInstance;
 
 // Save the deck to a JSON file
 const deck = JSON.stringify(deckInstance.getDeck(), null, 2);
-fs.writeFileSync('deck.json', deck);
-console.log('Deck saved to deck.json');
+fs.writeFileSync('dynamic_deck.json', deck);
+console.log('Deck saved to dynamic_deck.json');
