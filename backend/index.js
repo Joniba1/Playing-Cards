@@ -103,6 +103,6 @@ app.patch('/api/shuffleDeck', (req, res) => {
 
 //Starts the server and listens to incoming requests from the HTML file
 app.listen(port, () => {
-  updateJsonFile(defaultDeck);
+  //updateJsonFile(defaultDeck);
   console.log(`Server is running at ${base_URL}${port}`);
 });
