@@ -32,6 +32,7 @@ app.get('/api/getDeck', (req, res) => {
 //GET.2 - Returns a random CARD from the deck
 app.get('/api/getRndCardFromDeck', (req, res) => {
   const deck = readJsonFile();
+  
   if (deck.length == 0) {
     return res.status(404).json({ error: 'Deck is empty' });
   }
