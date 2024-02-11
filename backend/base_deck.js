@@ -1,6 +1,6 @@
 const fs = require('fs');
 
-//Singleton - 
+//Singleton 
 const DeckSingleton = (function () {
     let instance;
 
