@@ -71,17 +71,20 @@ app.delete('/api/deleteCard', (req, res) => {
 
   let deck = readJsonFile();
 
-  const updatedDeck = deck.filter(card => !(card.number === number && card.shape === shape));
+  const index = deck.findIndex(card => card.number === number && card.shape === shape);
 
-  updateJsonFile(updatedDeck);
-
-  if (updatedDeck.length === deck.length) {
-    res.json({ message: 'Card was not found' });
+  //deletes just one instance of the card even if there are multiple cases
+  if (index !== -1) {
+    deck.splice(index, 1);
+    updateJsonFile(deck);
+    res.json({ message: 'Card deleted successfully' });
   }
   else {
-    res.json({ message: 'Card deleted successfully' });
-
+    res.json({ message: 'Card was not found' });
   }
+
+
+
 });
 
 //PATCH - Shuffles the deck
