@@ -9,6 +9,8 @@ interface Card {
   imageUrl: string;
 }
 
+//check
+
 interface Deck {
   cards: Card[];
 }
