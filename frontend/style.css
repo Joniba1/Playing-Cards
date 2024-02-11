@@ -1,0 +1,16 @@
+#cardImagesContainer {
+    position: fixed;
+    margin: 20px;
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    max-height: 800px;
+    overflow-y: auto;
+  }
+
+  #cardImagesContainer img {
+    display: block;
+    margin: 5px;
+    width: 150px;
+    height: 200px;
+  }

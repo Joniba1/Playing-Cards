@@ -1,11 +1,15 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
-const defaultDeck = require('./deck.js').getDeck(); /*I need the default state of the deck, not the current, in order to always
-                                                      have access to the cards' urls even if a card was deleted (for the add card function)
-                                                      and for resetting the deck each time the server reopens*/
+
+/*I need the default state of the deck, not the current, in order to always
+ have access to the cards' urls even if a card was deleted (for the add card function)
+ and for resetting the deck each time the server reopens*/
+const defaultDeck = require('./deck.js').getDeck();
+
 const app = express();
 const port = 3000;
+const base_URL = 'http://localhost:'
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, '..', 'frontend'))); //serves as a 'middleperson', makes the server accessible to clients
@@ -32,7 +36,7 @@ app.get('/api/getDeck', (req, res) => {
 //GET.2 - Returns a random CARD from the deck
 app.get('/api/getRndCardFromDeck', (req, res) => {
   const deck = readJsonFile();
-  
+
   if (deck.length == 0) {
     return res.status(404).json({ error: 'Deck is empty' });
   }
@@ -100,5 +104,5 @@ app.patch('/api/shuffleDeck', (req, res) => {
 //Starts the server and listens to incoming requests from the HTML file
 app.listen(port, () => {
   updateJsonFile(defaultDeck);
-  console.log(`Server is running at http://localhost:${port}`);
+  console.log(`Server is running at ${base_URL}${port}`);
 });
