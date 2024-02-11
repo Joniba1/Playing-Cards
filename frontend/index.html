@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cards</title>
+
+
+  <!-- CSS -->
+  <style>
+    #cardImagesContainer {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      margin: 10px;
+      /* z-index: 9999; */
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    #cardImagesContainer img {
+      display: block;
+      margin-bottom: 6px;
+      width: 130px;
+      height: 195px;
+    }
+
+    #cardImagesContainer {
+      max-height: 830px;
+      overflow-y: auto;
+    }
+  </style>
+
+
+</head>
+
+<body>
+
+  <h1>Playing Cards</h1>
+
+  <div id="cardImagesContainer"></div>
+
+  <!-- buttons -->
+  <button onclick="clearScreen()">Clear Screen</button>
+  <button onclick="loadCardImages()">Load Deck</button>
+  <button onclick="getRandomCard()">Get Random Card</button>
+  <button onclick="shuffleDeck()">Shuffle Deck</button>
+  <button onclick="showDeleteCardForm(true)">Delete Specific Card</button>
+  <button onclick="showAddCardForm(true)">Add Specific Card</button>
+
+  <!-- forms -->
+  <form id="addCardForm" style="display: none;">
+
+    <h3>Add Card:</h3>
+
+    <label for="newCardNumber">Number:</label>
+    <select id="newCardNumber">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">Jack</option>
+      <option value="12">Queen</option>
+      <option value="13">King</option>
+    </select>
+
+    <label for="newCardShape">Shape:</label>
+    <select id="newCardShape">
+      <option value="diamonds">Diamonds</option>
+      <option value="clubs">Clubs</option>
+      <option value="hearts">Hearts</option>
+      <option value="spades">Spades</option>
+    </select>
+
+    <button onclick="addCard()">Submit</button>
+    <button onclick="showAddCardForm(false)">Cancel</button>
+
+  </form>
+
+  <form id="deleteCardForm" style="display: none;">
+
+    <h3>Delete Card:</h3>
+
+    <label for="deleteCardNumber">Number:</label>
+    <select id="deleteCardNumber">
+      <option value="1">1</option>
+      <option value="2">2</option>
+      <option value="3">3</option>
+      <option value="4">4</option>
+      <option value="5">5</option>
+      <option value="6">6</option>
+      <option value="7">7</option>
+      <option value="8">8</option>
+      <option value="9">9</option>
+      <option value="10">10</option>
+      <option value="11">Jack</option>
+      <option value="12">Queen</option>
+      <option value="13">King</option>
+    </select>
+
+    <label for="deleteCardShape">Shape:</label>
+    <select id="deleteCardShape">
+      <option value="diamonds">Diamonds</option>
+      <option value="clubs">Clubs</option>
+      <option value="hearts">Hearts</option>
+      <option value="spades">Spades</option>
+    </select>
+
+    <button onclick="deleteCard()">Submit</button>
+    <button onclick="showDeleteCardForm(false)">Cancel</button>
+
+  </form>
+
+
+  <script>
+
+    window.onload = loadCardImages;
+
+    //1. Requests the deck's current state (and loads the cards' pictures) -GET
+    async function loadCardImages() {
+      const response = await fetch('/api/getDeck', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      const deck = await response.json();
+
+      const cardImagesContainer = document.getElementById('cardImagesContainer');
+
+      // Clear previous images
+      clearScreen();
+
+      // Append new images
+      deck.forEach(card => {
+        const imgElement = document.createElement('img');
+        imgElement.src = card.imageUrl;
+        imgElement.alt = `Card ${card.number} - ${card.shape}`;
+        imgElement.width = 100;
+        imgElement.height = 150;
+        cardImagesContainer.appendChild(imgElement);
+      });
+    }
+
+    //2. Requests and load the pic of a random number from the deck -GET
+    async function getRandomCard() {
+      const response = await fetch('/api/getRndCardFromDeck', {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const randomCard = await response.json();
+
+      clearScreen(); // Clear previous images
+
+      const cardImagesContainer = document.getElementById('cardImagesContainer');
+
+      const imgElement = document.createElement('img');
+      imgElement.src = randomCard.imageUrl;
+      imgElement.alt = `Card ${randomCard.number} - ${randomCard.shape}`;
+      imgElement.width = 100;
+      imgElement.height = 150;
+      cardImagesContainer.appendChild(imgElement);
+    }
+
+    //3. Calls the deleteCard function from the backend -DELETE
+    async function deleteCard() {
+      const number = document.getElementById('deleteCardNumber').value;
+      const shape = document.getElementById('deleteCardShape').value;
+
+      const response = await fetch('/api/deleteCard', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ number, shape })
+      });
+
+      const result = await response.json();
+      alert(result.message);
+    }
+
+    //4. Requests the addCar function from the backend -POST
+    async function addCard() {
+
+      const number = document.getElementById('newCardNumber').value;
+      const shape = document.getElementById('newCardShape').value;
+      let imageUrl = "";
+      let color = "black";
+
+      if (shape === "diamonds" || shape === "hearts") {
+        color = "red"
+      }
+
+      const newCard = {
+        number, shape, color, imageUrl
+      };
+
+      const response = await fetch('/api/addCard', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newCard),
+      });
+
+      const result = await response.json();
+      alert(result.message);
+
+      showAddCardForm(false);
+
+    }
+
+    //5. Requests the shuffleDeck fucmtion from the backend and loads the deck -PATCH
+    async function shuffleDeck() {
+
+      const response = await fetch('/api/shuffleDeck', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+      const deck = await response.json();
+
+      loadCardImages();
+    }
+
+
+    //forms functions
+    function showAddCardForm(boolean) {
+      if (boolean == true) {
+        showDeleteCardForm(false);
+        document.getElementById('addCardForm').style.display = 'block'; //visible
+      }
+      else {
+        document.getElementById('addCardForm').style.display = 'none'; //!visible
+      }
+    }
+
+    function showDeleteCardForm(boolean) {
+      const cardImagesContainer = document.getElementById('cardImagesContainer'); //only once is fine since the form's functions call each other
+      cardImagesContainer.innerHTML = '';
+
+      if (boolean == true) {
+        showAddCardForm(false);
+        document.getElementById('deleteCardForm').style.display = 'block'; //visible
+      }
+      else {
+        document.getElementById('deleteCardForm').style.display = 'none'; //!visible
+      }
+    }
+
+
+    //Clears the screen
+    function clearScreen() {
+      const cardImagesContainer = document.getElementById('cardImagesContainer');
+      cardImagesContainer.innerHTML = '';
+      showAddCardForm(false);
+      showDeleteCardForm(false);
+    }
+
+  </script>
+
+</body>
+
+</html>
