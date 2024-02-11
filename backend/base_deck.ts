@@ -9,11 +9,11 @@ interface Card {
 }
 
 //Singleton 
-const DeckSingleton = (function () {
+const DeckSingleton = (() => {
     let instance: Card[];
 
-    function createInstance() {
-        const deckOfCards = [
+    function createInstance(): Card[] {
+        const deckOfCards: Card[] = [
             {
                 "number": 1,
                 "shape": "clubs",
@@ -349,7 +349,8 @@ const DeckSingleton = (function () {
 })();
 
 const deckInstance: Card[] = DeckSingleton.getInstance();
-module.exports = deckInstance;
+export const getDeck = DeckSingleton.getDeck;
+export default deckInstance;
 
 // Save the deck to a JSON file
 const deck = JSON.stringify(deckInstance, null, 2);
