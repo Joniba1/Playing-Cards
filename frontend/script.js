@@ -25,7 +25,7 @@ async function loadImagesFromBackend() {
     });
 }
 
-//2. Requests and load the pic of a random number from the deck -GET
+//2. Requests and load the picture of a random number from the deck -GET
 async function getRandomCard() {
     const response = await fetch(baseURL + '/api/getRndCardFromDeck', {
         method: 'GET',
@@ -45,7 +45,7 @@ async function getRandomCard() {
     cardImagesContainer.appendChild(img);
 }
 
-//3. Requests the addCar function from the backend -POST
+//3. Requests the addCard function from the backend -POST
 async function addCard() {
 
     const number = document.getElementById('newCardNumber').value;
