@@ -1,8 +1,16 @@
-const fs = require('fs');
+import * as fs from 'fs';
+
+
+interface Card {
+    number: number;
+    shape: string;
+    color: string;
+    imageUrl: string;
+}
 
 //Singleton 
 const DeckSingleton = (function () {
-    let instance;
+    let instance: Card[];
 
     function createInstance() {
         const deckOfCards = [
@@ -323,28 +331,27 @@ const DeckSingleton = (function () {
 
 
         //returns the deck
-        return {
-            getDeck: function () {
-                return deckOfCards;
-            }
-        };
+        return deckOfCards;
+
     }
 
     return {
-        //Creates an instance only if one doesn't already exist; otherwise, it returns the existing instance.
-        getInstance: function () {
+        getInstance: function (): Card[] {
             if (!instance) {
                 instance = createInstance();
             }
             return instance;
+        },
+        getDeck: function (): Card[] {
+            return instance;
         }
-    };
+    }
 })();
 
-const deckInstance = DeckSingleton.getInstance();
+const deckInstance: Card[] = DeckSingleton.getInstance();
 module.exports = deckInstance;
 
 // Save the deck to a JSON file
-const deck = JSON.stringify(deckInstance.getDeck(), null, 2);
+const deck = JSON.stringify(deckInstance, null, 2);
 fs.writeFileSync('dynamic_deck.json', deck);
 console.log('Deck saved to dynamic_deck.json');
