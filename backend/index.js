@@ -5,10 +5,8 @@ const defaultDeck  = require('./deck.js').getDeck(); /*I need the default state 
                                                       have access to the cards' urls even if a card was deleted (for the add card function)*/
 const app = express();
 const port = 3000;
-//check commit
 
 app.use(express.json());
-
 app.use(express.static(path.join(__dirname, '..', 'frontend'))); //serves as a 'middleperson', makes the server accessible to clients
 
 //Reads and returns the json file
@@ -94,5 +92,5 @@ app.patch('/api/shuffleDeck', (req, res) => {
 
 //Starts the server and listens to incoming requests from the HTML file
 app.listen(port, () => {
-  console.log('Server is running at http://localhost:${port}');
+  console.log(`Server is running at http://localhost:${port}`);
 });
