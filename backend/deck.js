@@ -11,7 +11,7 @@ const DeckSingleton = (function () {
                 "shape": "clubs",
                 "color": "black",
                 "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/01_of_clubs_A.svg/185px-01_of_clubs_A.svg.png"
-                
+
             },
             {
                 "number": 1,
@@ -248,7 +248,7 @@ const DeckSingleton = (function () {
                 "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/da/English_pattern_10_of_diamonds.svg/682px-English_pattern_10_of_diamonds.svg.png"
             },
             {
-                "number": 11, 
+                "number": 11,
                 "shape": "clubs",
                 "color": "black",
                 "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Jack_of_clubs2.svg/1200px-Jack_of_clubs2.svg.png"
