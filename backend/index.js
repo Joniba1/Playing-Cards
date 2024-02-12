@@ -83,14 +83,13 @@ app.delete('/api/deleteCard', (req, res) => {
     res.json({ message: 'Card was not found' });
   }
 
-
-
 });
 
 //PATCH - Shuffles the deck
 app.patch('/api/shuffleDeck', (req, res) => {
   let deck = readJsonFile();
-  for (let i = 0; i < deck.length; i++) {
+
+  for (let i = deck.length - 1; i > 0; i--) {
     const rnd = Math.floor(Math.random() * (i + 1));
     const card = deck[i];
     deck[i] = deck[rnd];

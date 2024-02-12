@@ -1,10 +1,10 @@
-const baseURL = 'http://localhost:3000'
+const URL = 'http://localhost:3000'
 
 window.onload = loadImagesFromBackend();
 
 //1. Requests the deck's current state (and loads the cards' pictures into the container) -GET
 async function loadImagesFromBackend() {
-    const response = await fetch(baseURL + '/api/getDeck', {
+    const response = await fetch(URL + '/api/getDeck', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -27,7 +27,7 @@ async function loadImagesFromBackend() {
 
 //2. Requests and load the picture of a random number from the deck -GET
 async function getRandomCard() {
-    const response = await fetch(baseURL + '/api/getRndCardFromDeck', {
+    const response = await fetch(URL + '/api/getRndCardFromDeck', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -61,7 +61,7 @@ async function addCard() {
         number, shape, color, imageUrl
     };
 
-    const response = await fetch(baseURL + '/api/addCard', {
+    const response = await fetch(URL + '/api/addCard', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -80,7 +80,7 @@ async function deleteCard() {
     const number = document.getElementById('deleteCardNumber').value;
     const shape = document.getElementById('deleteCardShape').value;
 
-    const response = await fetch(baseURL + '/api/deleteCard', {
+    const response = await fetch(URL + '/api/deleteCard', {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json'
@@ -96,7 +96,7 @@ async function deleteCard() {
 //5. Requests the shuffleDeck fucmtion from the backend and loads the deck -PATCH
 async function shuffleDeck() {
 
-    const response = await fetch(baseURL + '/api/shuffleDeck', {
+    const response = await fetch(URL + '/api/shuffleDeck', {
         method: 'PATCH',
         headers: {
             'Content-Type': 'application/json'
